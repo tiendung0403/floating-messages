@@ -27,7 +27,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       kind: t.kind ?? "info",
       title: t.title,
       message: t.message,
-      ttlMs: t.ttlMs ?? 2600,
+      ttlMs: t.ttlMs ?? 3000,
       createdAt: Date.now(),
     };
 
@@ -38,7 +38,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     () => ({
       push,
       success: (title, message) => push({ kind: "success", title, message }),
-      error: (title, message) => push({ kind: "error", title, message, ttlMs: 3200 }),
+      error: (title, message) => push({ kind: "error", title, message, ttlMs: 4000 }),
       info: (title, message) => push({ kind: "info", title, message }),
     }),
     [push]
