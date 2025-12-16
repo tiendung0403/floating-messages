@@ -21,13 +21,12 @@ async function initDb() {
     );
   `);
 
-  // Nếu bảng cũ chưa có sender thì add (an toàn)
   await pool.query(`
     ALTER TABLE messages
     ADD COLUMN IF NOT EXISTS sender VARCHAR(40) NOT NULL DEFAULT 'Anon';
   `);
 
-  console.log("DB ready ✅");
+  console.log("DB ready");
 }
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
