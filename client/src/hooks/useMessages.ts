@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Message } from "../types/message";
 import { createMessage, fetchMessages } from "../api/messagesApi";
-import { useToast } from "../toast/ToastProvider";
+import { useToast } from "../toast/useToast";
 
 export function useMessages(pollMs = 3500) {
   const toast = useToast();
