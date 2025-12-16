@@ -129,12 +129,16 @@ export default function BubbleLayer({ messages }: { messages: Message[] }) {
 
     setPositions(posMap);
   }, [visible, sizes, bounds]);
-
+  
   return (
     <div ref={containerRef} className="absolute inset-0 z-10 overflow-hidden">
       {visible.map((msg) => {
         const p = positions.get(msg.id) ?? { x: 20, y: 80, dx: 4, dy: -3, dur: 7 };
-
+        const styleVars = {
+                ["--dx" as `--${string}`]: `${p.dx}px`,
+                ["--dy" as `--${string}`]: `${p.dy}px`,
+                ["--dur" as `--${string}`]: `${p.dur}s`,
+              } satisfies React.CSSProperties;
         return (
           <div
             key={msg.id}
@@ -155,11 +159,7 @@ export default function BubbleLayer({ messages }: { messages: Message[] }) {
                 "relative",
                 "animate-floaty",
               ].join(" ")}
-              style={{
-                ["--dx" as any]: `${p.dx}px`,
-                ["--dy" as any]: `${p.dy}px`,
-                ["--dur" as any]: `${p.dur}s`,
-              }}
+              style={styleVars}
             >
               <span className="pointer-events-none absolute left-4 top-3 h-8 w-12 rounded-full bg-white/25 blur-sm" />
 
