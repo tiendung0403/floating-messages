@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Message } from "../types/message";
 import { createMessage, fetchMessages } from "../api/messagesApi";
 import { useToast } from "../toast/useToast";
 
 type ConnStatus = "connecting" | "online" | "offline";
 
-export function useMessages(pollMs = 3500) {
+export function useMessages(pollMs = 3500) {  
   const toast = useToast();
 
   const [messages, setMessages] = useState<Message[]>([]);
@@ -17,7 +17,7 @@ export function useMessages(pollMs = 3500) {
 
   const firstOkRef = useRef(false);
 
-  async function load() {
+  const load = useCallback(async () => {
     const data = await fetchMessages(40);
     setMessages(data);
     setOfflineDemo(false);
@@ -27,7 +27,7 @@ export function useMessages(pollMs = 3500) {
       firstOkRef.current = true;
       toast.success("Đã kết nối server", "");
     }
-  }
+  }, [toast]);  
 
   useEffect(() => {
     
@@ -49,7 +49,7 @@ export function useMessages(pollMs = 3500) {
 
     return () => clearInterval(t);
     
-  }, [pollMs]);
+  }, [pollMs, load, toast]);
 
   async function send(sender: string, content: string) {
     const s = sender.trim() || "Anon";
