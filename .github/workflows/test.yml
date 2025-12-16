@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:16
@@ -18,7 +18,7 @@ jobs:
           POSTGRES_PASSWORD: test
           POSTGRES_DB: test_db
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -31,8 +31,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
 
       - name: Install client dependencies
         working-directory: ./client
@@ -42,12 +45,12 @@ jobs:
         working-directory: ./server
         run: npm ci
 
-      - name: Run server tests
+      - name: Run server tests (if present)
         working-directory: ./server
         env:
           DATABASE_URL: postgresql://postgres:test@localhost:5432/test_db
-        run: npm test || echo "No tests configured"
+        run: npm run test --if-present
 
-      - name: Run client tests
+      - name: Run client tests (if present)
         working-directory: ./client
-        run: npm test || echo "No tests configured"
+        run: npm run test --if-present
